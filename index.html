@@ -1,264 +1,59 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SubGoals - Marathon 48h</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-        
-        body {
-            background: transparent;
-            overflow: hidden;
-            width: 100vw;
-            height: 100vh;
-        }
-        
-        .container {
-            display: flex;
-            height: 100vh;
-            position: relative;
-        }
-        
-        .toggle-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 1000;
-            background: #9146FF;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-        
-        .toggle-btn:hover {
-            background: #7d3ad6;
-            transform: translateY(-2px);
-        }
-        
-        .subgoal-panel {
-            width: 300px;
-            background: rgba(20, 20, 20, 0.85);
-            border-right: 3px solid #9146FF;
-            padding: 20px;
-            color: white;
-            transform: translateX(-100%);
-            transition: transform 0.5s ease-in-out;
-            height: 100vh;
-            overflow-y: auto;
-            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .subgoal-panel.visible {
-            transform: translateX(0);
-        }
-        
-        .panel-title {
-            text-align: center;
-            margin-bottom: 25px;
-            color: #9146FF;
-            font-size: 24px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            text-shadow: 0 0 10px rgba(145, 70, 255, 0.5);
-        }
-        
-        .subgoal {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-left: 4px solid #9146FF;
-            transition: all 0.3s ease;
-        }
-        
-        .subgoal:hover {
-            transform: translateX(5px);
-            background: rgba(255, 255, 255, 0.15);
-        }
-        
-        .subgoal-title {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #ffffff;
-        }
-        
-        .progress-container {
-            height: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 10px 0;
-        }
-        
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #9146FF, #5e17eb);
-            border-radius: 10px;
-            width: 0%;
-            transition: width 1s ease-in-out;
-            position: relative;
-        }
-        
-        .progress-text {
-            position: absolute;
-            right: 10px;
-            top: 0;
-            font-size: 12px;
-            color: white;
-            line-height: 20px;
-            text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
-        }
-        
-        .goal-info {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: #cccccc;
-        }
-        
-        .completed .progress-bar {
-            background: linear-gradient(90deg, #43e97b, #38f9d7);
-        }
-        
-        .completed .subgoal-title {
-            color: #43e97b;
-        }
-        
-        @keyframes celebrate {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        .celebrate {
-            animation: celebrate 0.5s ease-in-out 3;
-        }
-    </style>
+<meta charset="UTF-8">
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: transparent;
+  color: white;
+}
+
+/* Conteneur pour animation */
+#subgoal-container {
+  position: absolute;
+  right: -220px; /* Hors écran à droite au départ */
+  top: 50px;
+  width: 200px;
+  padding: 10px;
+  background: rgba(0,0,0,0.5);
+  border-radius: 10px;
+  transition: right 0.5s; /* animation de glissement */
+}
+
+#subgoal-container.show {
+  right: 10px; /* position visible à gauche */
+}
+
+h3 {
+  margin-top: 0;
+  text-align: center;
+}
+
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <button class="toggle-btn" id="toggleBtn">Afficher les Subgoals</button>
-        
-        <div class="subgoal-panel" id="subgoalPanel">
-            <h2 class="panel-title">Subgoals du Marathon</h2>
-            
-            <div class="subgoal" id="goal1">
-                <div class="subgoal-title">50 Subs - Jeux avec les viewers</div>
-                <div class="progress-container">
-                    <div class="progress-bar" style="width: 30%;">
-                        <span class="progress-text">15/50</span>
-                    </div>
-                </div>
-                <div class="goal-info">
-                    <span>Objectif: 50</span>
-                    <span>Actuel: 15</span>
-                </div>
-            </div>
-            
-            <div class="subgoal" id="goal2">
-                <div class="subgoal-title">100 Subs - Costume spécial</div>
-                <div class="progress-container">
-                    <div class="progress-bar" style="width: 10%;">
-                        <span class="progress-text">10/100</span>
-                    </div>
-                </div>
-                <div class="goal-info">
-                    <span>Objectif: 100</span>
-                    <span>Actuel: 10</span>
-                </div>
-            </div>
-            
-            <div class="subgoal" id="goal3">
-                <div class="subgoal-title">200 Subs - 1h de karaoké</div>
-                <div class="progress-container">
-                    <div class="progress-bar" style="width: 5%;">
-                        <span class="progress-text">10/200</span>
-                    </div>
-                </div>
-                <div class="goal-info">
-                    <span>Objectif: 200</span>
-                    <span>Actuel: 10</span>
-                </div>
-            </div>
-            
-            <div class="subgoal" id="goal4">
-                <div class="subgoal-title">500 Subs - 24h supplémentaires</div>
-                <div class="progress-container">
-                    <div class="progress-bar" style="width: 2%;">
-                        <span class="progress-text">10/500</span>
-                    </div>
-                </div>
-                <div class="goal-info">
-                    <span>Objectif: 500</span>
-                    <span>Actuel: 10</span>
-                </div>
-            </div>
-        </div>
-    </div>
+<div id="subgoal-container">
+  <h3>Subgoals</h3>
+  <ul id="subgoal-list">
+    <li>10 subs</li>
+    <li>20 subs</li>
+    <li>50 subs</li>
+  </ul>
+</div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const toggleBtn = document.getElementById('toggleBtn');
-            const subgoalPanel = document.getElementById('subgoalPanel');
-            let isVisible = false;
-            
-            // Fonction pour basculer l'affichage du panneau
-            toggleBtn.addEventListener('click', function() {
-                isVisible = !isVisible;
-                
-                if (isVisible) {
-                    subgoalPanel.classList.add('visible');
-                    toggleBtn.textContent = 'Cacher les Subgoals';
-                } else {
-                    subgoalPanel.classList.remove('visible');
-                    toggleBtn.textContent = 'Afficher les Subgoals';
-                }
-            });
-            
-            // Simulation de mise à jour des objectifs (à remplacer par vos vraies données)
-            function updateGoal(goalId, current, target) {
-                const goal = document.getElementById(goalId);
-                const progressBar = goal.querySelector('.progress-bar');
-                const progressText = goal.querySelector('.progress-text');
-                const goalInfo = goal.querySelectorAll('.goal-info span')[1];
-                
-                const percentage = (current / target) * 100;
-                
-                progressBar.style.width = percentage + '%';
-                progressText.textContent = current + '/' + target;
-                goalInfo.textContent = 'Actuel: ' + current;
-                
-                if (current >= target) {
-                    goal.classList.add('completed');
-                    goal.classList.add('celebrate');
-                    setTimeout(() => {
-                        goal.classList.remove('celebrate');
-                    }, 1500);
-                }
-            }
-            
-            // Simuler des mises à jour (à remplacer par vos données réelles)
-            setTimeout(() => updateGoal('goal1', 25, 50), 2000);
-            setTimeout(() => updateGoal('goal2', 15, 100), 4000);
-            setTimeout(() => updateGoal('goal1', 50, 50), 6000);
-            
-            // Pour les contrôles depuis OBS (optionnel)
-            window.toggleSubgoals = function() {
-                toggleBtn.click();
-            };
-        });
-    </script>
+<script>
+// Permet de faire glisser la subgoal avec un clic
+document.addEventListener('keydown', (e) => {
+  if(e.key === 's') { // appuie sur "s" pour slide
+    document.getElementById('subgoal-container').classList.toggle('show');
+  }
+});
+</script>
 </body>
 </html>
