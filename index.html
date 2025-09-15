@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SubGoals - Marathon 48h</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Montserrat', sans-serif;
         }
         
         body {
@@ -25,117 +26,155 @@
         }
         
         .subgoal-panel {
-            width: 300px;
-            background: rgba(20, 20, 20, 0.85);
-            border-right: 3px solid #9146FF;
+            width: 340px;
+            background: linear-gradient(to bottom, #1a1a2e, #16213e);
+            border-right: 4px solid #ff3860;
             padding: 20px;
             color: white;
             height: 100vh;
             overflow-y: auto;
-            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 8px 0 25px rgba(0, 0, 0, 0.4);
         }
         
         .panel-title {
             text-align: center;
             margin-bottom: 25px;
-            color: #9146FF;
-            font-size: 24px;
+            color: #ff3860;
+            font-size: 28px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            text-shadow: 0 0 10px rgba(145, 70, 255, 0.5);
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(255, 56, 96, 0.7);
+            font-weight: 800;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
         }
         
         .subgoal {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-left: 4px solid #9146FF;
+            background: linear-gradient(to right, #0f3460, #1a1a2e);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 20px;
+            border-left: 5px solid #ff3860;
             transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
         
         .subgoal:hover {
             transform: translateX(5px);
-            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
         }
         
         .subgoal-title {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
             color: #ffffff;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
         }
         
         .progress-container {
-            height: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            height: 26px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
             overflow: hidden;
-            margin: 10px 0;
+            margin: 12px 0;
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.4);
         }
         
         .progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, #9146FF, #5e17eb);
-            border-radius: 10px;
+            background: linear-gradient(90deg, #ff3860, #ff2b56);
+            border-radius: 15px;
             width: 0%;
             transition: width 1s ease-in-out;
             position: relative;
+            box-shadow: 0 0 15px rgba(255, 56, 96, 0.6);
         }
         
         .progress-text {
             position: absolute;
-            right: 10px;
+            right: 12px;
             top: 0;
-            font-size: 12px;
+            font-size: 14px;
+            font-weight: 700;
             color: white;
-            line-height: 20px;
-            text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+            line-height: 26px;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
         }
         
         .goal-info {
             display: flex;
             justify-content: space-between;
-            font-size: 12px;
-            color: #cccccc;
+            font-size: 14px;
+            font-weight: 600;
+            color: #e6e6e6;
         }
         
         .completed .progress-bar {
             background: linear-gradient(90deg, #43e97b, #38f9d7);
+            box-shadow: 0 0 15px rgba(67, 233, 123, 0.6);
         }
         
         .completed .subgoal-title {
             color: #43e97b;
+            text-shadow: 0 0 10px rgba(67, 233, 123, 0.5);
         }
         
         .marathon-info {
             text-align: center;
-            margin-top: 20px;
-            padding: 10px;
-            background: rgba(145, 70, 255, 0.2);
-            border-radius: 8px;
-        }
-        
-        .marathon-timer {
-            font-size: 18px;
-            font-weight: bold;
-            margin: 5px 0;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 56, 96, 0.2);
+            border-radius: 12px;
+            border: 2px solid rgba(255, 56, 96, 0.5);
         }
         
         .marathon-title {
-            font-size: 20px;
-            color: #9146FF;
+            font-size: 22px;
+            color: #ff3860;
             margin-bottom: 10px;
+            font-weight: 800;
+            text-shadow: 0 0 10px rgba(255, 56, 96, 0.5);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
         }
         
         @keyframes celebrate {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+            0% { transform: scale(1); box-shadow: 0 0 0 rgba(67, 233, 123, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(67, 233, 123, 0.8); }
+            100% { transform: scale(1); box-shadow: 0 0 0 rgba(67, 233, 123, 0.4); }
         }
         
         .celebrate {
             animation: celebrate 0.5s ease-in-out 3;
+        }
+        
+        /* Custom scrollbar */
+        .subgoal-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .subgoal-panel::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        .subgoal-panel::-webkit-scrollbar-thumb {
+            background: #ff3860;
+            border-radius: 10px;
+        }
+        
+        .subgoal-panel::-webkit-scrollbar-thumb:hover {
+            background: #ff2b56;
         }
     </style>
 </head>
@@ -145,13 +184,12 @@
             <h2 class="panel-title">Subgoals du Marathon</h2>
             
             <div class="marathon-info">
-                <div class="marathon-title">Marathon 48h</div>
-                <div class="marathon-timer" id="marathonTimer">00:00:00</div>
-                <div>En direct!</div>
+                <div class="marathon-title">MARATHON 48H</div>
+                <div>En direct sur Twitch!</div>
             </div>
             
-            <div class="subgoal" id="goal1">
-                <div class="subgoal-title">50 Subs - Jeux avec les viewers</div>
+            <div class="subgoal pulse" id="goal1">
+                <div class="subgoal-title">🎮 50 Subs - Jeux avec les viewers</div>
                 <div class="progress-container">
                     <div class="progress-bar" style="width: 30%;">
                         <span class="progress-text">15/50</span>
@@ -164,7 +202,7 @@
             </div>
             
             <div class="subgoal" id="goal2">
-                <div class="subgoal-title">100 Subs - Costume spécial</div>
+                <div class="subgoal-title">🎭 100 Subs - Costume spécial</div>
                 <div class="progress-container">
                     <div class="progress-bar" style="width: 10%;">
                         <span class="progress-text">10/100</span>
@@ -177,7 +215,7 @@
             </div>
             
             <div class="subgoal" id="goal3">
-                <div class="subgoal-title">200 Subs - 1h de karaoké</div>
+                <div class="subgoal-title">🎤 200 Subs - 1h de karaoké</div>
                 <div class="progress-container">
                     <div class="progress-bar" style="width: 5%;">
                         <span class="progress-text">10/200</span>
@@ -190,7 +228,7 @@
             </div>
             
             <div class="subgoal" id="goal4">
-                <div class="subgoal-title">500 Subs - 24h supplémentaires</div>
+                <div class="subgoal-title">⏰ 500 Subs - 24h supplémentaires</div>
                 <div class="progress-container">
                     <div class="progress-bar" style="width: 2%;">
                         <span class="progress-text">10/500</span>
@@ -203,7 +241,7 @@
             </div>
             
             <div class="subgoal" id="goal5">
-                <div class="subgoal-title">1000 Subs - Tournoi spécial viewers</div>
+                <div class="subgoal-title">🏆 1000 Subs - Tournoi spécial viewers</div>
                 <div class="progress-container">
                     <div class="progress-bar" style="width: 1%;">
                         <span class="progress-text">10/1000</span>
@@ -219,25 +257,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Timer pour le marathon
-            const marathonStart = new Date();
-            const timerElement = document.getElementById('marathonTimer');
-            
-            function updateTimer() {
-                const now = new Date();
-                const diff = now - marathonStart;
-                
-                const hours = Math.floor(diff / 3600000);
-                const minutes = Math.floor((diff % 3600000) / 60000);
-                const seconds = Math.floor((diff % 60000) / 1000);
-                
-                timerElement.textContent = 
-                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            }
-            
-            setInterval(updateTimer, 1000);
-            updateTimer();
-            
             // Fonction pour mettre à jour manuellement les objectifs
             window.updateGoal = function(goalId, current, target) {
                 const goal = document.getElementById(goalId);
@@ -256,6 +275,7 @@
                 if (current >= target) {
                     goal.classList.add('completed');
                     goal.classList.add('celebrate');
+                    goal.classList.remove('pulse');
                     setTimeout(() => {
                         goal.classList.remove('celebrate');
                     }, 1500);
