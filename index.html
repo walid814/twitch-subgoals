@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SubGoals Manager - Marathon 48h</title>
+    <title>SubGoals - Marathon 48h</title>
     <style>
         * {
             margin: 0;
@@ -13,132 +13,36 @@
         }
         
         body {
-            background: #1a1a2e;
-            color: #fff;
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: linear-gradient(90deg, #9146FF, #5e17eb);
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-        
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            background: transparent;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
         }
         
         .container {
             display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
+            height: 100vh;
         }
         
-        .control-panel {
-            flex: 1;
-            min-width: 300px;
-            background: rgba(30, 30, 46, 0.8);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .preview-panel {
-            flex: 2;
-            min-width: 400px;
-            background: rgba(30, 30, 46, 0.5);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            position: relative;
-            overflow: hidden;
-            min-height: 500px;
-        }
-        
-        h2 {
-            color: #9146FF;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #9146FF;
-        }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #e0e0e0;
-        }
-        
-        input, textarea {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid #9146FF;
-        }
-        
-        button {
-            background: #9146FF;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-top: 10px;
-            width: 100%;
-            transition: all 0.3s ease;
-        }
-        
-        button:hover {
-            background: #7d3ad6;
-            transform: translateY(-2px);
-        }
-        
-        .subgoal-list {
-            margin-top: 20px;
-        }
-        
-        .subgoal-item {
-            background: rgba(145, 70, 255, 0.2);
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .subgoal-display {
-            position: absolute;
-            top: 20px;
-            left: -320px;
+        .subgoal-panel {
             width: 300px;
             background: rgba(20, 20, 20, 0.85);
             border-right: 3px solid #9146FF;
             padding: 20px;
             color: white;
-            transition: transform 0.5s ease-in-out;
-            height: auto;
+            height: 100vh;
+            overflow-y: auto;
             box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
-            border-radius: 0 10px 10px 0;
         }
         
-        .subgoal-display.visible {
-            transform: translateX(320px);
+        .panel-title {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #9146FF;
+            font-size: 24px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(145, 70, 255, 0.5);
         }
         
         .subgoal {
@@ -147,6 +51,12 @@
             padding: 15px;
             margin-bottom: 15px;
             border-left: 4px solid #9146FF;
+            transition: all 0.3s ease;
+        }
+        
+        .subgoal:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.15);
         }
         
         .subgoal-title {
@@ -198,42 +108,24 @@
             color: #43e97b;
         }
         
-        .toggle-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #9146FF;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
+        .marathon-info {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            background: rgba(145, 70, 255, 0.2);
+            border-radius: 8px;
+        }
+        
+        .marathon-timer {
+            font-size: 18px;
             font-weight: bold;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            z-index: 10;
+            margin: 5px 0;
         }
         
-        .instructions {
-            background: rgba(30, 30, 46, 0.8);
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .instructions h2 {
-            color: #43e97b;
-        }
-        
-        .instructions ol {
-            padding-left: 20px;
-            margin-top: 15px;
-        }
-        
-        .instructions li {
+        .marathon-title {
+            font-size: 20px;
+            color: #9146FF;
             margin-bottom: 10px;
-            line-height: 1.5;
         }
         
         @keyframes celebrate {
@@ -248,205 +140,130 @@
     </style>
 </head>
 <body>
-    <header>
-        <h1>Gestionnaire de SubGoals pour Marathon 48h</h1>
-        <p>Configurez et contrôlez manuellement vos objectifs pendant le stream</p>
-    </header>
-    
     <div class="container">
-        <div class="control-panel">
-            <h2>Configuration des SubGoals</h2>
+        <div class="subgoal-panel" id="subgoalPanel">
+            <h2 class="panel-title">Subgoals du Marathon</h2>
             
-            <div class="form-group">
-                <label for="goalTitle">Titre de l'objectif</label>
-                <input type="text" id="goalTitle" placeholder="Ex: 100 Subs - Jeux avec viewers">
+            <div class="marathon-info">
+                <div class="marathon-title">Marathon 48h</div>
+                <div class="marathon-timer" id="marathonTimer">00:00:00</div>
+                <div>En direct!</div>
             </div>
             
-            <div class="form-group">
-                <label for="goalTarget">Objectif (nombre)</label>
-                <input type="number" id="goalTarget" placeholder="Ex: 100">
-            </div>
-            
-            <div class="form-group">
-                <label for="goalCurrent">Valeur actuelle</label>
-                <input type="number" id="goalCurrent" placeholder="Ex: 25">
-            </div>
-            
-            <button id="addGoal">Ajouter un SubGoal</button>
-            
-            <div class="subgoal-list">
-                <h3>SubGoals Actifs</h3>
-                <div id="goalsContainer">
-                    <!-- Les objectifs seront ajoutés ici -->
+            <div class="subgoal" id="goal1">
+                <div class="subgoal-title">50 Subs - Jeux avec les viewers</div>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 30%;">
+                        <span class="progress-text">15/50</span>
+                    </div>
                 </div>
-            </div>
-        </div>
-        
-        <div class="preview-panel">
-            <h2>Aperçu OBS</h2>
-            <button class="toggle-btn" id="toggleBtn">Afficher SubGoals</button>
-            
-            <div class="subgoal-display" id="subgoalDisplay">
-                <h3 style="text-align: center; color: #9146FF; margin-bottom: 20px;">SubGoals du Marathon</h3>
-                <div id="subgoalsPreview">
-                    <!-- L'aperçu des subgoals sera ajouté ici -->
+                <div class="goal-info">
+                    <span>Objectif: 50</span>
+                    <span>Actuel: 15</span>
                 </div>
             </div>
             
-            <p style="margin-top: 20px; text-align: center; color: #aaa;">
-                Cet aperçu montre comment vos subgoals apparaîtront dans OBS.<br>
-                Utilisez le bouton "Afficher SubGoals" pour tester l'animation.
-            </p>
+            <div class="subgoal" id="goal2">
+                <div class="subgoal-title">100 Subs - Costume spécial</div>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 10%;">
+                        <span class="progress-text">10/100</span>
+                    </div>
+                </div>
+                <div class="goal-info">
+                    <span>Objectif: 100</span>
+                    <span>Actuel: 10</span>
+                </div>
+            </div>
+            
+            <div class="subgoal" id="goal3">
+                <div class="subgoal-title">200 Subs - 1h de karaoké</div>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 5%;">
+                        <span class="progress-text">10/200</span>
+                    </div>
+                </div>
+                <div class="goal-info">
+                    <span>Objectif: 200</span>
+                    <span>Actuel: 10</span>
+                </div>
+            </div>
+            
+            <div class="subgoal" id="goal4">
+                <div class="subgoal-title">500 Subs - 24h supplémentaires</div>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 2%;">
+                        <span class="progress-text">10/500</span>
+                    </div>
+                </div>
+                <div class="goal-info">
+                    <span>Objectif: 500</span>
+                    <span>Actuel: 10</span>
+                </div>
+            </div>
+            
+            <div class="subgoal" id="goal5">
+                <div class="subgoal-title">1000 Subs - Tournoi spécial viewers</div>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 1%;">
+                        <span class="progress-text">10/1000</span>
+                    </div>
+                </div>
+                <div class="goal-info">
+                    <span>Objectif: 1000</span>
+                    <span>Actuel: 10</span>
+                </div>
+            </div>
         </div>
-    </div>
-    
-    <div class="instructions">
-        <h2>Comment utiliser dans OBS</h2>
-        <ol>
-            <li>Configurez vos subgoals avec le formulaire à gauche</li>
-            <li>Cliquez sur "Ajouter un SubGoal" pour le sauvegarder</li>
-            <li>Cliquez sur "Afficher SubGoals" pour tester l'animation</li>
-            <li>Dans OBS, ajoutez une source "Navigateur" et entrez l'URL de cette page</li>
-            <li>Pendant le stream, vous pourrez mettre à jour manuellement les valeurs</li>
-            <li>Utilisez le bouton dans l'aperçu ou appelez <code>toggleSubgoals()</code> depuis la console pour contrôler l'affichage</li>
-        </ol>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const toggleBtn = document.getElementById('toggleBtn');
-            const subgoalDisplay = document.getElementById('subgoalDisplay');
-            const addGoalBtn = document.getElementById('addGoal');
-            const goalsContainer = document.getElementById('goalsContainer');
-            const subgoalsPreview = document.getElementById('subgoalsPreview');
-            let isVisible = false;
-            let goals = [];
+            // Timer pour le marathon
+            const marathonStart = new Date();
+            const timerElement = document.getElementById('marathonTimer');
             
-            // Fonction pour basculer l'affichage du panneau
-            toggleBtn.addEventListener('click', function() {
-                isVisible = !isVisible;
+            function updateTimer() {
+                const now = new Date();
+                const diff = now - marathonStart;
                 
-                if (isVisible) {
-                    subgoalDisplay.classList.add('visible');
-                    toggleBtn.textContent = 'Cacher SubGoals';
-                } else {
-                    subgoalDisplay.classList.remove('visible');
-                    toggleBtn.textContent = 'Afficher SubGoals';
-                }
-            });
-            
-            // Fonction pour ajouter un nouveau subgoal
-            addGoalBtn.addEventListener('click', function() {
-                const title = document.getElementById('goalTitle').value;
-                const target = parseInt(document.getElementById('goalTarget').value);
-                const current = parseInt(document.getElementById('goalCurrent').value);
+                const hours = Math.floor(diff / 3600000);
+                const minutes = Math.floor((diff % 3600000) / 60000);
+                const seconds = Math.floor((diff % 60000) / 1000);
                 
-                if (!title || isNaN(target) || isNaN(current)) {
-                    alert('Veuillez remplir tous les champs correctement');
-                    return;
-                }
-                
-                const goalId = 'goal_' + Date.now();
-                const goal = {
-                    id: goalId,
-                    title,
-                    target,
-                    current
-                };
-                
-                goals.push(goal);
-                updateGoalList();
-                updatePreview();
-                
-                // Réinitialiser le formulaire
-                document.getElementById('goalTitle').value = '';
-                document.getElementById('goalTarget').value = '';
-                document.getElementById('goalCurrent').value = '';
-            });
-            
-            // Mettre à jour la liste des objectifs
-            function updateGoalList() {
-                goalsContainer.innerHTML = '';
-                
-                goals.forEach((goal, index) => {
-                    const goalElement = document.createElement('div');
-                    goalElement.className = 'subgoal-item';
-                    goalElement.innerHTML = `
-                        <div>
-                            <strong>${goal.title}</strong><br>
-                            <small>${goal.current} / ${goal.target}</small>
-                        </div>
-                        <div>
-                            <button onclick="updateGoalValue(${index}, 1)">+1</button>
-                            <button onclick="removeGoal(${index})">X</button>
-                        </div>
-                    `;
-                    goalsContainer.appendChild(goalElement);
-                });
+                timerElement.textContent = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             }
             
-            // Mettre à jour l'aperçu
-            function updatePreview() {
-                subgoalsPreview.innerHTML = '';
-                
-                goals.forEach(goal => {
-                    const percentage = (goal.current / goal.target) * 100;
-                    const isCompleted = goal.current >= goal.target;
-                    
-                    const goalElement = document.createElement('div');
-                    goalElement.className = `subgoal ${isCompleted ? 'completed' : ''}`;
-                    goalElement.innerHTML = `
-                        <div class="subgoal-title">${goal.title}</div>
-                        <div class="progress-container">
-                            <div class="progress-bar" style="width: ${percentage}%;">
-                                <span class="progress-text">${goal.current}/${goal.target}</span>
-                            </div>
-                        </div>
-                        <div class="goal-info">
-                            <span>Objectif: ${goal.target}</span>
-                            <span>Actuel: ${goal.current}</span>
-                        </div>
-                    `;
-                    subgoalsPreview.appendChild(goalElement);
-                });
-            }
+            setInterval(updateTimer, 1000);
+            updateTimer();
             
-            // Fonctions globales pour les boutons
-            window.updateGoalValue = function(index, value) {
-                goals[index].current += value;
-                updateGoalList();
-                updatePreview();
+            // Fonction pour mettre à jour manuellement les objectifs
+            window.updateGoal = function(goalId, current, target) {
+                const goal = document.getElementById(goalId);
+                if (!goal) return;
                 
-                // Animation de célébration si objectif atteint
-                if (goals[index].current >= goals[index].target) {
-                    const goalElements = document.querySelectorAll('.subgoal');
-                    goalElements[index].classList.add('celebrate');
+                const progressBar = goal.querySelector('.progress-bar');
+                const progressText = goal.querySelector('.progress-text');
+                const goalInfo = goal.querySelectorAll('.goal-info span')[1];
+                
+                const percentage = (current / target) * 100;
+                
+                progressBar.style.width = percentage + '%';
+                progressText.textContent = current + '/' + target;
+                goalInfo.textContent = 'Actuel: ' + current;
+                
+                if (current >= target) {
+                    goal.classList.add('completed');
+                    goal.classList.add('celebrate');
                     setTimeout(() => {
-                        goalElements[index].classList.remove('celebrate');
+                        goal.classList.remove('celebrate');
                     }, 1500);
                 }
             };
             
-            window.removeGoal = function(index) {
-                goals.splice(index, 1);
-                updateGoalList();
-                updatePreview();
-            };
-            
-            // Pour les contrôles depuis OBS (optionnel)
-            window.toggleSubgoals = function() {
-                toggleBtn.click();
-            };
-            
-            // Exemple de données initiales
-            goals = [
-                { id: 'goal_1', title: '50 Subs - Jeux avec les viewers', target: 50, current: 15 },
-                { id: 'goal_2', title: '100 Subs - Costume spécial', target: 100, current: 10 },
-                { id: 'goal_3', title: '200 Subs - 1h de karaoké', target: 200, current: 10 }
-            ];
-            
-            updateGoalList();
-            updatePreview();
+            // Exemple: comment mettre à jour manuellement un objectif
+            // updateGoal('goal1', 25, 50);
         });
     </script>
 </body>
