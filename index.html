@@ -441,13 +441,13 @@
         let currentSubs = 0;
         let maxSubs = 500; // Le plus haut objectif
         let completedGoals = [];
-        
+        /*
         // Fonction pour détecter OBS
         function isOBS() {
             return navigator.userAgent.includes('OBS') || 
                    window.location.search.includes('obs');
         }
-        
+        */
         // Éléments DOM
         const subProgress = document.getElementById('subProgress');
         const progressText = document.getElementById('progressText');
@@ -456,12 +456,12 @@
         const goalElements = document.querySelectorAll('.goal');
         const notification = document.getElementById('notification');
         const notificationMessage = document.getElementById('notificationMessage');
-        
+        /*
         // Initialisation
         if (isOBS()) {
             document.body.classList.add('obs-mode');
         }
-        
+        */
         loadSubsFromStorage();
         updateSubsDisplay();
         checkCompletedGoals();
