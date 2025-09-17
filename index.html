@@ -6,6 +6,7 @@
     <title>Squadir - Objectifs Stream</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Votre CSS existant reste inchangé */
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Roboto:wght@400;700&display=swap');
         
         * {
@@ -312,9 +313,23 @@
                 text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ff00c8, 0 0 40px #ff00c8;
             }
         }
+        
+        .obs-warning {
+            background: rgba(255, 204, 0, 0.2);
+            border: 1px solid #ffcc00;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            text-align: center;
+            display: none;
+        }
     </style>
 </head>
 <body>
+    <div class="obs-warning" id="obsWarning">
+        <i class="fas fa-exclamation-triangle"></i> Mode OBS activé - Affichage seule
+    </div>
+    
     <div class="container">
         <div class="header">
             <div class="profile">
@@ -418,7 +433,7 @@
     </div>
 
     <!-- Panel de contrôle séparé en dessous du conteneur principal -->
-    <div class="admin-panel">
+    <div class="admin-panel" id="adminPanel">
         <div class="admin-title"><i class="fas fa-cog"></i> PANEL DE CONTRÔLE STREAM</div>
         <div class="admin-controls">
             <button class="admin-btn" onclick="updateSubs(1)"><i class="fas fa-plus"></i> +1 Sub</button>
@@ -441,13 +456,18 @@
         let currentSubs = 0;
         let maxSubs = 500; // Le plus haut objectif
         let completedGoals = [];
-        /*
-        // Fonction pour détecter OBS
-        function isOBS() {
-            return navigator.userAgent.includes('OBS') || 
-                   window.location.search.includes('obs');
+        
+        // Fonction pour récupérer les paramètres d'URL
+        function getURLParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
         }
-        */
+        
+        // Vérifier si nous sommes en mode OBS
+        function isOBSMode() {
+            return getURLParameter('obs') === 'true';
+        }
+        
         // Éléments DOM
         const subProgress = document.getElementById('subProgress');
         const progressText = document.getElementById('progressText');
@@ -456,18 +476,32 @@
         const goalElements = document.querySelectorAll('.goal');
         const notification = document.getElementById('notification');
         const notificationMessage = document.getElementById('notificationMessage');
-        /*
+        const adminPanel = document.getElementById('adminPanel');
+        const obsWarning = document.getElementById('obsWarning');
+        
         // Initialisation
-        if (isOBS()) {
+        if (isOBSMode()) {
             document.body.classList.add('obs-mode');
+            obsWarning.style.display = 'block';
+            adminPanel.style.display = 'none';
         }
-        */
+        
         loadSubsFromStorage();
         updateSubsDisplay();
         checkCompletedGoals();
         
         // Charger depuis le stockage local
         function loadSubsFromStorage() {
+            if (isOBSMode()) {
+                // En mode OBS, on lit depuis l'URL
+                const urlSubs = getURLParameter('subs');
+                if (urlSubs !== null) {
+                    currentSubs = parseInt(urlSubs);
+                }
+                return;
+            }
+            
+            // Mode normal (votre panneau de contrôle)
             const savedSubs = localStorage.getItem('squadirSubs');
             if (savedSubs !== null) {
                 currentSubs = parseInt(savedSubs);
@@ -481,8 +515,19 @@
         
         // Sauvegarder dans le stockage local
         function saveSubsToStorage() {
+            if (isOBSMode()) {
+                return; // Ne pas sauvegarder en mode OBS
+            }
+            
             localStorage.setItem('squadirSubs', currentSubs);
             localStorage.setItem('squadirCompletedGoals', JSON.stringify(completedGoals));
+            
+            // Mettre à jour l'URL pour que OBS puisse lire
+            if (window.history.replaceState) {
+                const newUrl = new URL(window.location);
+                newUrl.searchParams.set('subs', currentSubs);
+                window.history.replaceState({}, '', newUrl);
+            }
         }
         
         // Mettre à jour l'affichage
