@@ -218,6 +218,14 @@
             box-shadow: 0 0 15px #00ffff;
         }
         
+        .admin-btn.reset {
+            background: linear-gradient(135deg, #ff3333, #ff9966);
+        }
+        
+        .admin-btn.reset:hover {
+            box-shadow: 0 0 15px #ff3333;
+        }
+        
         .completed-goal {
             border-color: #00ff00 !important;
             box-shadow: 0 0 15px #00ff00 !important;
@@ -417,7 +425,7 @@
             <button class="admin-btn" onclick="updateSubs(5)"><i class="fas fa-plus"></i> +5 Subs</button>
             <button class="admin-btn" onclick="updateSubs(10)"><i class="fas fa-plus"></i> +10 Subs</button>
             <button class="admin-btn" onclick="setSubsManually()"><i class="fas fa-edit"></i> Définir manuellement</button>
-            <button class="admin-btn" onclick="resetSubs()"><i class="fas fa-redo"></i> Réinitialiser</button>
+            <button class="admin-btn reset" onclick="resetSubs()"><i class="fas fa-redo"></i> Réinitialiser</button>
         </div>
         <div class="reset-info">
             <p>Pour OBS: Rafraîchir la source après modification</p>
@@ -533,18 +541,16 @@
             }
         }
         
-        // Réinitialiser les subs
+        // Réinitialiser les subs (en un seul clic)
         function resetSubs() {
-            if (confirm("Êtes-vous sûr de vouloir réinitialiser le compteur de subs?")) {
-                currentSubs = 0;
-                completedGoals = [];
-                updateSubsDisplay();
-                showNotification("Compteur réinitialisé");
-                
-                // Forcer la réinitialisation même dans OBS
-                localStorage.setItem('squadirSubs', '0');
-                localStorage.setItem('squadirCompletedGoals', '[]');
-            }
+            currentSubs = 0;
+            completedGoals = [];
+            updateSubsDisplay();
+            showNotification("Compteur réinitialisé");
+            
+            // Forcer la réinitialisation même dans OBS
+            localStorage.setItem('squadirSubs', '0');
+            localStorage.setItem('squadirCompletedGoals', '[]');
         }
         
         // Afficher une notification
