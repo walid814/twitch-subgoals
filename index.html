@@ -6,7 +6,6 @@
     <title>Squadir - Objectifs Stream</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Votre CSS existant reste inchangé */
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Roboto:wght@400;700&display=swap');
         
         * {
@@ -283,6 +282,16 @@
             font-size: 0.9rem;
         }
         
+        .obs-warning {
+            background: rgba(255, 204, 0, 0.2);
+            border: 1px solid #ffcc00;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            text-align: center;
+            display: none;
+        }
+        
         @media (max-width: 900px) {
             .goals-columns {
                 flex-direction: column;
@@ -314,14 +323,11 @@
             }
         }
         
-        .obs-warning {
-            background: rgba(255, 204, 0, 0.2);
-            border: 1px solid #ffcc00;
-            border-radius: 5px;
-            padding: 10px;
-            margin: 10px 0;
+        .sync-info {
             text-align: center;
-            display: none;
+            margin-top: 15px;
+            color: #00ffff;
+            font-size: 0.9rem;
         }
     </style>
 </head>
@@ -445,6 +451,9 @@
         <div class="reset-info">
             <p>Pour OBS: Rafraîchir la source après modification</p>
         </div>
+        <div class="sync-info" id="syncInfo">
+            <i class="fas fa-sync"></i> Synchronisation automatique activée
+        </div>
     </div>
 
     <div class="notification" id="notification">
@@ -456,16 +465,12 @@
         let currentSubs = 0;
         let maxSubs = 500; // Le plus haut objectif
         let completedGoals = [];
+        let isOBSMode = false;
         
         // Fonction pour récupérer les paramètres d'URL
         function getURLParameter(name) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(name);
-        }
-        
-        // Vérifier si nous sommes en mode OBS
-        function isOBSMode() {
-            return getURLParameter('obs') === 'true';
         }
         
         // Éléments DOM
@@ -478,56 +483,78 @@
         const notificationMessage = document.getElementById('notificationMessage');
         const adminPanel = document.getElementById('adminPanel');
         const obsWarning = document.getElementById('obsWarning');
+        const syncInfo = document.getElementById('syncInfo');
         
         // Initialisation
-        if (isOBSMode()) {
-            document.body.classList.add('obs-mode');
-            obsWarning.style.display = 'block';
-            adminPanel.style.display = 'none';
-        }
-        
-        loadSubsFromStorage();
-        updateSubsDisplay();
-        checkCompletedGoals();
-        
-        // Charger depuis le stockage local
-        function loadSubsFromStorage() {
-            if (isOBSMode()) {
+        function init() {
+            // Vérifier si nous sommes en mode OBS
+            isOBSMode = getURLParameter('obs') === 'true';
+            
+            if (isOBSMode) {
+                document.body.classList.add('obs-mode');
+                obsWarning.style.display = 'block';
+                adminPanel.style.display = 'none';
+                syncInfo.style.display = 'none';
+                
                 // En mode OBS, on lit depuis l'URL
                 const urlSubs = getURLParameter('subs');
                 if (urlSubs !== null) {
                     currentSubs = parseInt(urlSubs);
                 }
-                return;
+            } else {
+                // Mode normal (votre panneau de contrôle)
+                const savedSubs = localStorage.getItem('squadirSubs');
+                if (savedSubs !== null) {
+                    currentSubs = parseInt(savedSubs);
+                }
+                
+                const savedGoals = localStorage.getItem('squadirCompletedGoals');
+                if (savedGoals) {
+                    completedGoals = JSON.parse(savedGoals);
+                }
+                
+                // Mettre à jour l'URL avec les données actuelles
+                updateURL();
             }
             
-            // Mode normal (votre panneau de contrôle)
-            const savedSubs = localStorage.getItem('squadirSubs');
-            if (savedSubs !== null) {
-                currentSubs = parseInt(savedSubs);
-            }
+            updateSubsDisplay();
+            checkCompletedGoals();
             
-            const savedGoals = localStorage.getItem('squadirCompletedGoals');
-            if (savedGoals) {
-                completedGoals = JSON.parse(savedGoals);
+            // Vérifier périodiquement les changements d'URL (pour OBS)
+            if (isOBSMode) {
+                setInterval(checkForURLChanges, 1000);
+            }
+        }
+        
+        // Vérifier les changements d'URL (pour OBS)
+        function checkForURLChanges() {
+            const urlSubs = getURLParameter('subs');
+            if (urlSubs !== null) {
+                const newSubs = parseInt(urlSubs);
+                if (newSubs !== currentSubs) {
+                    currentSubs = newSubs;
+                    updateSubsDisplay();
+                }
+            }
+        }
+        
+        // Mettre à jour l'URL avec les données actuelles
+        function updateURL() {
+            if (window.history.replaceState) {
+                const newUrl = new URL(window.location);
+                newUrl.searchParams.set('subs', currentSubs);
+                newUrl.searchParams.set('obs', 'false');
+                window.history.replaceState({}, '', newUrl);
             }
         }
         
         // Sauvegarder dans le stockage local
         function saveSubsToStorage() {
-            if (isOBSMode()) {
-                return; // Ne pas sauvegarder en mode OBS
-            }
+            if (isOBSMode) return; // Ne pas sauvegarder en mode OBS
             
             localStorage.setItem('squadirSubs', currentSubs);
             localStorage.setItem('squadirCompletedGoals', JSON.stringify(completedGoals));
-            
-            // Mettre à jour l'URL pour que OBS puisse lire
-            if (window.history.replaceState) {
-                const newUrl = new URL(window.location);
-                newUrl.searchParams.set('subs', currentSubs);
-                window.history.replaceState({}, '', newUrl);
-            }
+            updateURL();
         }
         
         // Mettre à jour l'affichage
@@ -593,7 +620,7 @@
             updateSubsDisplay();
             showNotification("Compteur réinitialisé");
             
-            // Forcer la réinitialisation même dans OBS
+            // Forcer la réinitialisation
             localStorage.setItem('squadirSubs', '0');
             localStorage.setItem('squadirCompletedGoals', '[]');
         }
@@ -636,6 +663,9 @@
                 animation.onfinish = () => confetti.remove();
             }
         }
+        
+        // Initialiser l'application
+        init();
     </script>
 </body>
 </html>
