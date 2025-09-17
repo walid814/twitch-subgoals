@@ -263,6 +263,10 @@
             z-index: 100;
         }
         
+        .obs-mode .admin-panel {
+            display: none !important;
+        }
+        
         @media (max-width: 900px) {
             .goals-columns {
                 flex-direction: column;
@@ -420,6 +424,12 @@
         let maxSubs = 500; // Le plus haut objectif
         let completedGoals = [];
         
+        // Fonction pour détecter OBS
+        function isOBS() {
+            return navigator.userAgent.includes('OBS') || 
+                   window.location.search.includes('obs');
+        }
+        
         // Éléments DOM
         const subProgress = document.getElementById('subProgress');
         const progressText = document.getElementById('progressText');
@@ -430,6 +440,15 @@
         const notificationMessage = document.getElementById('notificationMessage');
         
         // Initialisation
+        if (isOBS()) {
+            document.body.classList.add('obs-mode');
+            
+            // Rafraîchir périodiquement pour OBS
+            setInterval(function() {
+                location.reload();
+            }, 10000); // Rafraîchir toutes les 10 secondes
+        }
+        
         loadSubsFromStorage();
         updateSubsDisplay();
         checkCompletedGoals();
