@@ -267,6 +267,13 @@
             display: none !important;
         }
         
+        .reset-info {
+            text-align: center;
+            margin-top: 20px;
+            color: #ffcc00;
+            font-size: 0.9rem;
+        }
+        
         @media (max-width: 900px) {
             .goals-columns {
                 flex-direction: column;
@@ -412,6 +419,9 @@
             <button class="admin-btn" onclick="setSubsManually()"><i class="fas fa-edit"></i> Définir manuellement</button>
             <button class="admin-btn" onclick="resetSubs()"><i class="fas fa-redo"></i> Réinitialiser</button>
         </div>
+        <div class="reset-info">
+            <p>Pour OBS: Rafraîchir la source après modification</p>
+        </div>
     </div>
 
     <div class="notification" id="notification">
@@ -442,11 +452,6 @@
         // Initialisation
         if (isOBS()) {
             document.body.classList.add('obs-mode');
-            
-            // Rafraîchir périodiquement pour OBS
-            setInterval(function() {
-                location.reload();
-            }, 10000); // Rafraîchir toutes les 10 secondes
         }
         
         loadSubsFromStorage();
@@ -535,6 +540,10 @@
                 completedGoals = [];
                 updateSubsDisplay();
                 showNotification("Compteur réinitialisé");
+                
+                // Forcer la réinitialisation même dans OBS
+                localStorage.setItem('squadirSubs', '0');
+                localStorage.setItem('squadirCompletedGoals', '[]');
             }
         }
         
