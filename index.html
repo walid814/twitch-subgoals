@@ -37,12 +37,18 @@
             box-shadow: 0 0 30px rgba(255, 0, 200, 0.5);
             border: 2px solid #ff00c8;
             position: relative;
+            opacity: 0;
+            transform: translateX(100px);
+            animation: slideInSwing 1.2s forwards;
         }
         
         .header {
             text-align: center;
             margin-bottom: 40px;
             position: relative;
+            opacity: 0;
+            transform: translateX(80px);
+            animation: slideInSwing 1s forwards 0.3s;
         }
         
         .title {
@@ -73,6 +79,9 @@
             align-items: center;
             justify-content: center;
             transition: transform 0.3s ease;
+            opacity: 0;
+            transform: translateX(60px);
+            animation: slideInSwing 0.8s forwards 0.6s;
         }
         
         .profile:hover {
@@ -83,6 +92,47 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+        }
+        
+        .counter {
+            text-align: center;
+            font-size: 2rem;
+            margin: 20px 0;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+            opacity: 0;
+            transform: translateX(70px);
+            animation: slideInSwing 0.9s forwards 0.9s;
+        }
+        
+        .progress-bar {
+            height: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+            opacity: 0;
+            transform: translateX(80px);
+            animation: slideInSwing 0.9s forwards 1.1s;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #ff00c8, #00ffff);
+            border-radius: 15px;
+            width: 0%;
+            transition: width 1s ease;
+        }
+        
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px black;
         }
         
         .goals-columns {
@@ -111,6 +161,8 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            opacity: 0;
+            transform: translateX(100px);
         }
         
         .goal:hover {
@@ -135,41 +187,6 @@
             line-height: 1.4;
         }
         
-        .progress-bar {
-            height: 30px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 15px;
-            margin: 20px 0;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .progress {
-            height: 100%;
-            background: linear-gradient(90deg, #ff00c8, #00ffff);
-            border-radius: 15px;
-            width: 0%;
-            transition: width 1s ease;
-        }
-        
-        .progress-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-weight: bold;
-            text-shadow: 1px 1px 2px black;
-        }
-        
-        .counter {
-            text-align: center;
-            font-size: 2rem;
-            margin: 20px 0;
-            color: #00ffff;
-            text-shadow: 0 0 10px #00ffff;
-        }
-        
         .interaction-panel {
             background: rgba(0, 0, 0, 0.7);
             border: 2px solid #ffcc00;
@@ -179,6 +196,9 @@
             max-width: 1000px;
             width: 100%;
             margin-top: 20px;
+            opacity: 0;
+            transform: translateX(100px);
+            animation: slideInSwing 1.1s forwards 1.8s;
         }
         
         .interaction-title {
@@ -212,7 +232,15 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            opacity: 0;
+            transform: translateX(80px);
         }
+        
+        .interaction-btn:nth-child(1) { animation: slideInSwing 0.7s forwards 2.0s; }
+        .interaction-btn:nth-child(2) { animation: slideInSwing 0.7s forwards 2.1s; }
+        .interaction-btn:nth-child(3) { animation: slideInSwing 0.7s forwards 2.2s; }
+        .interaction-btn:nth-child(4) { animation: slideInSwing 0.7s forwards 2.3s; }
+        .interaction-btn:nth-child(5) { animation: slideInSwing 0.7s forwards 2.4s; }
         
         .interaction-btn:hover {
             transform: scale(1.05);
@@ -277,6 +305,9 @@
             margin-top: 20px;
             color: #ffcc00;
             font-size: 0.9rem;
+            opacity: 0;
+            transform: translateX(80px);
+            animation: slideInSwing 0.8s forwards 2.6s;
         }
         
         @media (max-width: 900px) {
@@ -299,6 +330,24 @@
         
         .neon-effect {
             animation: neonPulse 2s infinite alternate;
+        }
+        
+        /* Animation personnalisée swing */
+        @keyframes slideInSwing {
+            0% {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            60% {
+                transform: translateX(-20px);
+            }
+            80% {
+                transform: translateX(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
         
         @keyframes neonPulse {
@@ -333,42 +382,42 @@
         <div class="goals-columns">
             <!-- Colonne de gauche -->
             <div class="goals-column">
-                <div class="goal" data-threshold="3">
+                <div class="goal" data-threshold="3" style="animation: slideInSwing 0.8s forwards 1.3s;">
                     <div class="goal-amount"><i class="fas fa-camera"></i> 3 SUBS</div>
                     <div class="goal-text">J'active la cam</div>
                 </div>
                 
-                <div class="goal" data-threshold="20">
+                <div class="goal" data-threshold="20" style="animation: slideInSwing 0.8s forwards 1.4s;">
                     <div class="goal-amount"><i class="fas fa-gamepad"></i> 20 SUBS</div>
                     <div class="goal-text">Je joue avec les abonnés</div>
                 </div>
                 
-                <div class="goal" data-threshold="40">
+                <div class="goal" data-threshold="40" style="animation: slideInSwing 0.8s forwards 1.5s;">
                     <div class="goal-amount"><i class="fas fa-pepper-hot"></i> 40 SUBS</div>
                     <div class="goal-text">Chips la plus piquante</div>
                 </div>
                 
-                <div class="goal" data-threshold="60">
+                <div class="goal" data-threshold="60" style="animation: slideInSwing 0.8s forwards 1.6s;">
                     <div class="goal-amount"><i class="fas fa-plus-circle"></i> 60 SUBS</div>
                     <div class="goal-text">+6H de stream en plus</div>
                 </div>
                 
-                <div class="goal" data-threshold="100">
+                <div class="goal" data-threshold="100" style="animation: slideInSwing 0.8s forwards 1.3s;">
                     <div class="goal-amount"><i class="fas fa-tshirt"></i> 100 SUBS</div>
                     <div class="goal-text">1 KILL = 1 Vêtement en reload</div>
                 </div>
                 
-                <div class="goal" data-threshold="140">
+                <div class="goal" data-threshold="140" style="animation: slideInSwing 0.8s forwards 1.4s;">
                     <div class="goal-amount"><i class="fas fa-plus-circle"></i> 140 SUBS</div>
                     <div class="goal-text">+12H de stream en plus</div>
                 </div>
                 
-                <div class="goal" data-threshold="200">
+                <div class="goal" data-threshold="200" style="animation: slideInSwing 0.8s forwards 1.5s;">
                     <div class="goal-amount"><i class="fas fa-cookie"></i> 200 SUBS</div>
                     <div class="goal-text">Je mange des croquettes</div>
                 </div>
                 
-                <div class="goal" data-threshold="500">
+                <div class="goal" data-threshold="500" style="animation: slideInSwing 0.8s forwards 1.6s;">
                     <div class="goal-amount"><i class="fas fa-trophy"></i> 500 SUBS</div>
                     <div class="goal-text">Bootcamp FNCS avec NOAGGS en 2026</div>
                 </div>
@@ -376,37 +425,37 @@
             
             <!-- Colonne de droite -->
             <div class="goals-column">
-                <div class="goal" data-threshold="10">
+                <div class="goal" data-threshold="10" style="animation: slideInSwing 0.8s forwards 1.3s;">
                     <div class="goal-amount"><i class="fas fa-utensils"></i> 10 SUBS</div>
                     <div class="goal-text">Chips la plus salée</div>
                 </div>
                 
-                <div class="goal" data-threshold="30">
+                <div class="goal" data-threshold="30" style="animation: slideInSwing 0.8s forwards 1.4s;">
                     <div class="goal-amount"><i class="fas fa-dumbbell"></i> 30 SUBS</div>
                     <div class="goal-text">100 pompes</div>
                 </div>
                 
-                <div class="goal" data-threshold="50">
+                <div class="goal" data-threshold="50" style="animation: slideInSwing 0.8s forwards 1.5s;">
                     <div class="goal-amount"><i class="fas fa-cocktail"></i> 50 SUBS</div>
                     <div class="goal-text">Mounette me fait un cocktail dégueulasse</div>
                 </div>
                 
-                <div class="goal" data-threshold="80">
+                <div class="goal" data-threshold="80" style="animation: slideInSwing 0.8s forwards 1.6s;">
                     <div class="goal-amount"><i class="fas fa-ghost"></i> 80 SUBS</div>
                     <div class="goal-text">On joue à un jeu d'horreur hardcore</div>
                 </div>
                 
-                <div class="goal" data-threshold="120">
+                <div class="goal" data-threshold="120" style="animation: slideInSwing 0.8s forwards 1.3s;">
                     <div class="goal-amount"><i class="fas fa-bed"></i> 120 SUBS</div>
                     <div class="goal-text">J'active la caméra pendant que je dors</div>
                 </div>
                 
-                <div class="goal" data-threshold="180">
+                <div class="goal" data-threshold="180" style="animation: slideInSwing 0.8s forwards 1.4s;">
                     <div class="goal-amount"><i class="fas fa-chain-broken"></i> 180 SUBS</div>
                     <div class="goal-text">Je dois finir Chained Together sans tomber</div>
                 </div>
                 
-                <div class="goal" data-threshold="300">
+                <div class="goal" data-threshold="300" style="animation: slideInSwing 0.8s forwards 1.5s;">
                     <div class="goal-amount"><i class="fas fa-utensil-spoon"></i> 300 SUBS</div>
                     <div class="goal-text">Je cuisine en stream WWWWWWWWWWWWWWWWWW</div>
                 </div>
