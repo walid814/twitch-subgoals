@@ -170,7 +170,7 @@
             text-shadow: 0 0 10px #00ffff;
         }
         
-        .admin-panel {
+        .interaction-panel {
             background: rgba(0, 0, 0, 0.7);
             border: 2px solid #ffcc00;
             border-radius: 15px;
@@ -178,9 +178,10 @@
             box-shadow: 0 0 20px rgba(255, 204, 0, 0.5);
             max-width: 1000px;
             width: 100%;
+            margin-top: 20px;
         }
         
-        .admin-title {
+        .interaction-title {
             font-size: 1.8rem;
             color: #ffcc00;
             text-align: center;
@@ -188,14 +189,14 @@
             text-shadow: 0 0 10px #ffcc00;
         }
         
-        .admin-controls {
+        .interaction-controls {
             display: flex;
             justify-content: space-around;
             flex-wrap: wrap;
             gap: 15px;
         }
         
-        .admin-btn {
+        .interaction-btn {
             background: linear-gradient(135deg, #ff00c8, #00ffff);
             border: none;
             border-radius: 8px;
@@ -213,16 +214,16 @@
             gap: 8px;
         }
         
-        .admin-btn:hover {
+        .interaction-btn:hover {
             transform: scale(1.05);
             box-shadow: 0 0 15px #00ffff;
         }
         
-        .admin-btn.reset {
+        .interaction-btn.reset {
             background: linear-gradient(135deg, #ff3333, #ff9966);
         }
         
-        .admin-btn.reset:hover {
+        .interaction-btn.reset:hover {
             box-shadow: 0 0 15px #ff3333;
         }
         
@@ -271,50 +272,11 @@
             z-index: 100;
         }
         
-        .obs-mode .admin-panel {
-            display: none !important;
-        }
-        
-        .reset-info {
+        .click-info {
             text-align: center;
             margin-top: 20px;
             color: #ffcc00;
             font-size: 0.9rem;
-        }
-        
-        .obs-warning {
-            background: rgba(255, 204, 0, 0.2);
-            border: 1px solid #ffcc00;
-            border-radius: 5px;
-            padding: 10px;
-            margin: 10px 0;
-            text-align: center;
-            display: none;
-        }
-        
-        .sync-info {
-            text-align: center;
-            margin-top: 15px;
-            color: #00ffff;
-            font-size: 0.9rem;
-        }
-        
-        .refresh-btn {
-            background: linear-gradient(135deg, #00ffff, #ff00c8);
-            border: none;
-            border-radius: 8px;
-            padding: 8px 15px;
-            color: white;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-        
-        .refresh-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px #00ffff;
         }
         
         @media (max-width: 900px) {
@@ -326,11 +288,11 @@
                 font-size: 2.5rem;
             }
             
-            .admin-controls {
+            .interaction-controls {
                 flex-direction: column;
             }
             
-            .admin-btn {
+            .interaction-btn {
                 width: 100%;
             }
         }
@@ -350,10 +312,6 @@
     </style>
 </head>
 <body>
-    <div class="obs-warning" id="obsWarning">
-        <i class="fas fa-exclamation-triangle"></i> Mode OBS activé - Lecture seule
-    </div>
-    
     <div class="container">
         <div class="header">
             <div class="profile">
@@ -456,24 +414,18 @@
         </div>
     </div>
 
-    <!-- Panel de contrôle séparé en dessous du conteneur principal -->
-    <div class="admin-panel" id="adminPanel">
-        <div class="admin-title"><i class="fas fa-cog"></i> PANEL DE CONTRÔLE STREAM</div>
-        <div class="admin-controls">
-            <button class="admin-btn" onclick="updateSubs(1)"><i class="fas fa-plus"></i> +1 Sub</button>
-            <button class="admin-btn" onclick="updateSubs(5)"><i class="fas fa-plus"></i> +5 Subs</button>
-            <button class="admin-btn" onclick="updateSubs(10)"><i class="fas fa-plus"></i> +10 Subs</button>
-            <button class="admin-btn" onclick="setSubsManually()"><i class="fas fa-edit"></i> Définir manuellement</button>
-            <button class="admin-btn reset" onclick="resetSubs()"><i class="fas fa-redo"></i> Réinitialiser</button>
+    <!-- Panel d'interaction pour OBS -->
+    <div class="interaction-panel">
+        <div class="interaction-title"><i class="fas fa-mouse-pointer"></i> INTERACTION OBS - CLIQUEZ POUR AJOUTER DES SUBS</div>
+        <div class="interaction-controls">
+            <button class="interaction-btn" onclick="updateSubs(1)"><i class="fas fa-plus"></i> +1 Sub</button>
+            <button class="interaction-btn" onclick="updateSubs(3)"><i class="fas fa-plus"></i> +3 Subs</button>
+            <button class="interaction-btn" onclick="updateSubs(5)"><i class="fas fa-plus"></i> +5 Subs</button>
+            <button class="interaction-btn" onclick="updateSubs(10)"><i class="fas fa-plus"></i> +10 Subs</button>
+            <button class="interaction-btn reset" onclick="resetSubs()"><i class="fas fa-redo"></i> Réinitialiser</button>
         </div>
-        <div class="reset-info">
-            <p>Pour OBS: Rafraîchir la source après modification</p>
-            <button class="refresh-btn" onclick="forceRefreshOBS()">
-                <i class="fas fa-sync"></i> Forcer le rafraîchissement OBS
-            </button>
-        </div>
-        <div class="sync-info" id="syncInfo">
-            <i class="fas fa-sync"></i> Synchronisation automatique activée
+        <div class="click-info">
+            <p>Activez "Interagir" dans OBS pour permettre aux viewers de cliquer</p>
         </div>
     </div>
 
@@ -486,8 +438,6 @@
         let currentSubs = 0;
         let maxSubs = 500; // Le plus haut objectif
         let completedGoals = [];
-        let isOBSMode = false;
-        let lastUpdateTime = 0;
         
         // Éléments DOM
         const subProgress = document.getElementById('subProgress');
@@ -497,30 +447,11 @@
         const goalElements = document.querySelectorAll('.goal');
         const notification = document.getElementById('notification');
         const notificationMessage = document.getElementById('notificationMessage');
-        const adminPanel = document.getElementById('adminPanel');
-        const obsWarning = document.getElementById('obsWarning');
-        const syncInfo = document.getElementById('syncInfo');
         
         // Initialisation
-        function init() {
-            // Vérifier si nous sommes en mode OBS
-            isOBSMode = window.location.search.includes('obs=true');
-            
-            if (isOBSMode) {
-                document.body.classList.add('obs-mode');
-                obsWarning.style.display = 'block';
-                adminPanel.style.display = 'none';
-                syncInfo.style.display = 'none';
-            }
-            
-            // Charger les données depuis le stockage local
-            loadSubsFromStorage();
-            updateSubsDisplay();
-            checkCompletedGoals();
-            
-            // Démarrer la surveillance des changements
-            startStorageMonitoring();
-        }
+        loadSubsFromStorage();
+        updateSubsDisplay();
+        checkCompletedGoals();
         
         // Charger depuis le stockage local
         function loadSubsFromStorage() {
@@ -533,58 +464,12 @@
             if (savedGoals) {
                 completedGoals = JSON.parse(savedGoals);
             }
-            
-            // Vérifier le timestamp pour éviter les conflits
-            const savedTimestamp = localStorage.getItem('squadirTimestamp');
-            if (savedTimestamp) {
-                lastUpdateTime = parseInt(savedTimestamp);
-            }
         }
         
         // Sauvegarder dans le stockage local
         function saveSubsToStorage() {
             localStorage.setItem('squadirSubs', currentSubs);
             localStorage.setItem('squadirCompletedGoals', JSON.stringify(completedGoals));
-            localStorage.setItem('squadirTimestamp', Date.now().toString());
-        }
-        
-        // Surveiller les changements de stockage
-        function startStorageMonitoring() {
-            window.addEventListener('storage', function(e) {
-                if (e.key === 'squadirSubs' && e.newValue !== null) {
-                    const newSubs = parseInt(e.newValue);
-                    if (newSubs !== currentSubs) {
-                        currentSubs = newSubs;
-                        updateSubsDisplay();
-                        
-                        if (isOBSMode) {
-                            showNotification(`Nouveau total: ${currentSubs} subs`);
-                        }
-                    }
-                }
-                
-                if (e.key === 'squadirTimestamp' && e.newValue !== null) {
-                    const newTimestamp = parseInt(e.newValue);
-                    if (newTimestamp > lastUpdateTime) {
-                        lastUpdateTime = newTimestamp;
-                        loadSubsFromStorage();
-                        updateSubsDisplay();
-                    }
-                }
-            });
-            
-            // Vérifier périodiquement les changements
-            setInterval(function() {
-                const savedTimestamp = localStorage.getItem('squadirTimestamp');
-                if (savedTimestamp) {
-                    const newTimestamp = parseInt(savedTimestamp);
-                    if (newTimestamp > lastUpdateTime) {
-                        lastUpdateTime = newTimestamp;
-                        loadSubsFromStorage();
-                        updateSubsDisplay();
-                    }
-                }
-            }, 1000);
         }
         
         // Mettre à jour l'affichage
@@ -596,10 +481,7 @@
             subCountElement.textContent = currentSubs;
             maxSubsElement.textContent = maxSubs;
             
-            if (!isOBSMode) {
-                saveSubsToStorage();
-            }
-            
+            saveSubsToStorage();
             checkCompletedGoals();
         }
         
@@ -610,11 +492,8 @@
                 if (currentSubs >= threshold) {
                     if (!completedGoals.includes(threshold)) {
                         completedGoals.push(threshold);
-                        if (!isOBSMode) {
-                            showGoalNotification(threshold);
-                            createConfetti();
-                            saveSubsToStorage();
-                        }
+                        showGoalNotification(threshold);
+                        createConfetti();
                     }
                     goal.classList.add('completed-goal');
                 } else {
@@ -625,58 +504,19 @@
         
         // Mettre à jour le nombre de subs
         function updateSubs(value) {
-            if (isOBSMode) return;
-            
             currentSubs += value;
             if (currentSubs < 0) currentSubs = 0;
             if (currentSubs > maxSubs) currentSubs = maxSubs;
-            
-            saveSubsToStorage();
             updateSubsDisplay();
             showNotification(`+${value} Subs! Total: ${currentSubs}`);
         }
         
-        // Définir manuellement le nombre de subs
-        function setSubsManually() {
-            if (isOBSMode) return;
-            
-            const newSubs = prompt("Entrez le nouveau nombre de subs:", currentSubs);
-            if (newSubs !== null && !isNaN(newSubs)) {
-                const oldSubs = currentSubs;
-                currentSubs = parseInt(newSubs);
-                if (currentSubs < 0) currentSubs = 0;
-                
-                saveSubsToStorage();
-                updateSubsDisplay();
-                
-                const diff = currentSubs - oldSubs;
-                if (diff > 0) {
-                    showNotification(`+${diff} Subs! Total: ${currentSubs}`);
-                } else {
-                    showNotification(`Nouveau total: ${currentSubs} subs`);
-                }
-            }
-        }
-        
-        // Réinitialiser les subs
+        // Réinitialiser les subs (un seul clic sans confirmation)
         function resetSubs() {
-            if (isOBSMode) return;
-            
-            if (confirm("Êtes-vous sûr de vouloir réinitialiser le compteur à 0?")) {
-                currentSubs = 0;
-                completedGoals = [];
-                
-                saveSubsToStorage();
-                updateSubsDisplay();
-                showNotification("Compteur réinitialisé");
-            }
-        }
-        
-        // Forcer le rafraîchissement OBS
-        function forceRefreshOBS() {
-            // Cette fonction ne peut pas réellement rafraîchir OBS à distance,
-            // mais elle affiche un message pour rappeler à l'utilisateur
-            showNotification("Pensez à rafraîchir la source navigateur dans OBS");
+            currentSubs = 0;
+            completedGoals = [];
+            updateSubsDisplay();
+            showNotification("Compteur réinitialisé");
         }
         
         // Afficher une notification
@@ -717,9 +557,6 @@
                 animation.onfinish = () => confetti.remove();
             }
         }
-        
-        // Initialiser l'application
-        init();
     </script>
 </body>
 </html>
