@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Overlay OBS - Squadir</title>
+    <title>Tableau de Bord Stream</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Roboto:wght@400;700&display=swap');
@@ -15,7 +15,7 @@
         }
         
         body {
-            background-color: transparent !important;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
             color: white;
             font-family: 'Montserrat', sans-serif;
             min-height: 100vh;
@@ -24,7 +24,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
+            overflow-x: hidden;
             gap: 20px;
         }
         
@@ -38,7 +38,7 @@
         .container {
             width: 650px;
             margin: 0 auto;
-            background: rgba(20, 20, 30, 0.85); /* Fond semi-transparent sombre */
+            background: rgba(0, 0, 0, 0.7);
             border-radius: 15px;
             padding: 30px;
             box-shadow: 0 0 30px rgba(255, 0, 200, 0.5);
@@ -49,7 +49,6 @@
             animation: slideInSwing 1.2s forwards;
             display: flex;
             flex-direction: column;
-            backdrop-filter: blur(5px); /* Effet de flou sur l'arrière-plan */
         }
         
         .counter {
@@ -83,7 +82,7 @@
             height: 100%;
             background: linear-gradient(90deg, #ff00c8, #00ffff);
             border-radius: 15px;
-            width: 1.4%;
+            width: 0%;
             transition: width 1s ease;
         }
         
@@ -145,7 +144,7 @@
         }
         
         .goal {
-            background: rgba(30, 30, 40, 0.8);
+            background: rgba(0, 0, 0, 0.5);
             border: 2px solid #00ffff;
             border-radius: 10px;
             padding: 15px;
@@ -205,7 +204,7 @@
             height: 100%;
             background: linear-gradient(90deg, #ff00c8, #00ffff);
             border-radius: 4px;
-            width: 70%;
+            width: 0%;
             transition: width 0.5s ease;
         }
         
@@ -219,7 +218,7 @@
         
         .interaction-panel {
             width: 1000px;
-            background: rgba(20, 20, 30, 0.85);
+            background: rgba(0, 0, 0, 0.7);
             border: 2px solid #ffcc00;
             border-radius: 15px;
             padding: 15px;
@@ -230,7 +229,6 @@
             animation: slideInSwing 1.1s forwards 1.8s;
             display: flex;
             flex-direction: column;
-            backdrop-filter: blur(5px);
         }
         
         .interaction-title {
@@ -413,153 +411,25 @@
             50% { transform: scale(1.2); }
             100% { transform: scale(1); }
         }
-        
-        /* Styles pour la prévisualisation OBS */
-        .obs-preview {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            border: 2px solid #ff00c8;
-            z-index: 1000;
-            max-width: 300px;
-        }
-        
-        .obs-preview h3 {
-            color: #ff00c8;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        
-        .obs-preview ul {
-            margin-left: 20px;
-            margin-bottom: 10px;
-        }
-        
-        .obs-preview li {
-            margin-bottom: 5px;
-            font-size: 0.9rem;
-        }
-        
-        .obs-preview code {
-            background: #333;
-            padding: 2px 5px;
-            border-radius: 4px;
-        }
-        
-        .close-preview {
-            position: absolute;
-            top: 5px;
-            right: 10px;
-            cursor: pointer;
-            font-size: 1.2rem;
-            color: #ff00c8;
-        }
-        
-        /* Simulation d'arrière-plan pour la démo */
-        .background-demo {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, #ff9966, #ff5e62, #cc2b5e, #753a88);
-            z-index: -1;
-            opacity: 0.7;
-        }
-        
-        .demo-controls {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 15px;
-            border-radius: 10px;
-            color: white;
-            z-index: 1000;
-            max-width: 300px;
-        }
-        
-        .demo-controls h3 {
-            color: #ffcc00;
-            margin-bottom: 10px;
-        }
-        
-        .color-options {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .color-option {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid white;
-        }
     </style>
 </head>
 <body>
-    <div class="background-demo"></div>
-    
-    <div class="obs-preview">
-        <span class="close-preview" onclick="this.parentElement.style.display='none'">×</span>
-        <h3>Instructions OBS</h3>
-        <p>Pour éliminer le fond dans OBS:</p>
-        <ul>
-            <li>1. Clic droit sur la source navigateur</li>
-            <li>2. Propriétés → CSS personnalisé</li>
-            <li>3. Collez ce code:</li>
-        </ul>
-        <code>body { background-color: rgba(0,0,0,0) !important; overflow: hidden; }</code>
-        <p style="margin-top: 10px; font-size: 0.8rem;">Cliquez sur × pour fermer</p>
-    </div>
-
-    <div class="demo-controls">
-        <h3>Simulation d'arrière-plan</h3>
-        <p>Changez la couleur pour tester la transparence:</p>
-        <div class="color-options">
-            <div class="color-option" style="background: #ff9966;" onclick="changeBackground('linear-gradient(45deg, #ff9966, #ff5e62, #cc2b5e, #753a88)')"></div>
-            <div class="color-option" style="background: #00ccff;" onclick="changeBackground('linear-gradient(45deg, #00ccff, #00aacc, #0088aa, #006688)')"></div>
-            <div class="color-option" style="background: #77ff77;" onclick="changeBackground('linear-gradient(45deg, #77ff77, #55dd55, #33bb33, #119911)')"></div>
-            <div class="color-option" style="background: #ffff77;" onclick="changeBackground('linear-gradient(45deg, #ffff77, #ffff55, #ffff33, #ffff11)')"></div>
-        </div>
-    </div>
-
     <div class="main-container">
-
-        <!-- Compteur de subs -->
         <div class="container">
             <div class="counter">
-                <i class="fas fa-gift"></i>
-                <span>SUBS:</span>
-                <span id="subCount">7</span>
-                <span>/</span>
-                <span id="maxSubs">500</span>
+                 <i class="fas fa-gift"></i> SUBS: <span id="subCount">0</span>/<span id="maxSubs">500</span>
             </div>
-
-            <!-- Barre de progression principale -->
+            
             <div class="progress-bar">
                 <div class="progress" id="subProgress"></div>
-                <div class="progress-text" id="progressText">1.4%</div>
+                <div class="progress-text" id="progressText">0%</div>
             </div>
-
-            <!-- Rotateur d'objectifs -->
+            
             <div class="goals-rotator">
                 <div class="rotator-controls">
-                    <button class="rotator-btn prev" onclick="changeGoalSet(-1)">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <span class="rotator-timer">
-                        Rotation: <span id="timer">0:15</span>
-                    </span>
-                    <button class="rotator-btn next" onclick="changeGoalSet(1)">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
+                    <button class="rotator-btn prev" onclick="changeGoalSet(-1)"><i class="fas fa-chevron-left"></i></button>
+                    <span class="rotator-timer">Rotation: <span id="timer">0:15</span></span>
+                    <button class="rotator-btn next" onclick="changeGoalSet(1)"><i class="fas fa-chevron-right"></i></button>
                 </div>
                 <div class="active-goals" id="activeGoals">
                     <!-- Les objectifs actifs seront insérés ici par JavaScript -->
@@ -569,32 +439,18 @@
 
         <!-- Panel d'interaction pour OBS -->
         <div class="interaction-panel">
-            <div class="interaction-title">
-                <i class="fas fa-mouse-pointer"></i>
-                INTERACTION OBS - CLIQUEZ POUR AJOUTER
-            </div>
+            <div class="interaction-title"><i class="fas fa-mouse-pointer"></i> INTERACTION OBS - CLIQUEZ POUR AJOUTER</div>
             <div class="interaction-controls">
-                <button class="interaction-btn" onclick="updateSubs(1)">
-                    <i class="fas fa-plus"></i> +1
-                </button>
-                <button class="interaction-btn" onclick="updateSubs(3)">
-                    <i class="fas fa-plus"></i> +3
-                </button>
-                <button class="interaction-btn" onclick="updateSubs(5)">
-                    <i class="fas fa-plus"></i> +5
-                </button>
-                <button class="interaction-btn" onclick="updateSubs(10)">
-                    <i class="fas fa-plus"></i> +10
-                </button>
-                <button class="interaction-btn reset" onclick="resetSubs()">
-                    <i class="fas fa-redo"></i> Réinitialiser
-                </button>
+                <button class="interaction-btn" onclick="updateSubs(1)"><i class="fas fa-plus"></i> +1</button>
+                <button class="interaction-btn" onclick="updateSubs(3)"><i class="fas fa-plus"></i> +3</button>
+                <button class="interaction-btn" onclick="updateSubs(5)"><i class="fas fa-plus"></i> +5</button>
+                <button class="interaction-btn" onclick="updateSubs(10)"><i class="fas fa-plus"></i> +10</button>
+                <button class="interaction-btn reset" onclick="resetSubs()"><i class="fas fa-redo"></i> Réinitialiser</button>
             </div>
             <div class="click-info">
                 <p>Activez "Interagir" dans OBS pour permettre aux viewers de cliquer</p>
             </div>
         </div>
-
     </div>
 
     <div class="notification" id="notification">
@@ -603,7 +459,7 @@
 
     <script>
         // Configuration
-        let currentSubs = 7;
+        let currentSubs = 0;
         let maxSubs = 500;
         let completedGoals = [];
         let currentGoalSet = 0;
@@ -613,21 +469,21 @@
         // Tous les objectifs
         const allGoals = [
             {threshold: 3, icon: 'fa-camera', text: "J'active la cam"},
-            {threshold: 10, icon: 'fa-utensils', text: "Chips la plus salée"},
             {threshold: 20, icon: 'fa-gamepad', text: "Je joue avec les abonnés"},
-            {threshold: 30, icon: 'fa-dumbbell', text: "100 pompes"},
             {threshold: 40, icon: 'fa-pepper-hot', text: "Chips la plus piquante"},
-            {threshold: 50, icon: 'fa-cocktail', text: "Mounette me fait un cocktail dégueulasse"},
             {threshold: 60, icon: 'fa-plus-circle', text: "+6H de stream en plus"},
-            {threshold: 80, icon: 'fa-ghost', text: "On joue à un jeu d'horreur hardcore"},
             {threshold: 100, icon: 'fa-tshirt', text: "1 KILL = 1 Vêtement en reload"},
-            {threshold: 120, icon: 'fa-bed', text: "J'active la caméra pendant que je dors"},
             {threshold: 140, icon: 'fa-plus-circle', text: "+12H de stream en plus"},
-            {threshold: 180, icon: 'fa-chain-broken', text: "Je dois finir Chained Together sans tomber"},
             {threshold: 200, icon: 'fa-cookie', text: "Je mange des croquettes"},
-            {threshold: 300, icon: 'fa-utensil-spoon', text: "Je cuisine en stream"},
-            {threshold: 500, icon: 'fa-trophy', text: "Bootcamp FNCS avec NOAGGS en 2026"}
-        ];
+            {threshold: 500, icon: 'fa-trophy', text: "Bootcamp FNCS avec NOAGGS en 2026"},
+            {threshold: 10, icon: 'fa-utensils', text: "Chips la plus salée"},
+            {threshold: 30, icon: 'fa-dumbbell', text: "100 pompes"},
+            {threshold: 50, icon: 'fa-cocktail', text: "Mounette me fait un cocktail dégueulasse"},
+            {threshold: 80, icon: 'fa-ghost', text: "On joue à un jeu d'horreur hardcore"},
+            {threshold: 120, icon: 'fa-bed', text: "J'active la caméra pendant que je dors"},
+            {threshold: 180, icon: 'fa-chain-broken', text: "Je dois finir Chained Together sans tomber"},
+            {threshold: 300, icon: 'fa-utensil-spoon', text: "Je cuisine en stream"}
+        ];  
         
         // Groupes d'objectifs (4 par groupe)
         const goalSets = [];
@@ -650,11 +506,6 @@
         updateSubsDisplay();
         displayGoalSet(0);
         startRotationTimer();
-        
-        // Fonction pour changer l'arrière-plan de démonstration
-        function changeBackground(gradient) {
-            document.querySelector('.background-demo').style.background = gradient;
-        }
         
         // Charger depuis le stockage local
         function loadSubsFromStorage() {
@@ -723,7 +574,7 @@
                     </div>
                     <div class="mini-progress">
                         <div class="mini-progress-bar" data-threshold="${goal.threshold}"></div>
-                        <div class="mini-progress-text">${Math.min(currentSubs, goal.threshold)}/${goal.threshold}</div>
+                        <div class="mini-progress-text">0/${goal.threshold}</div>
                     </div>
                 `;
                 
