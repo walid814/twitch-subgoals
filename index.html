@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de Bord Stream</title>
+    <title>Overlay OBS - Squadir</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Roboto:wght@400;700&display=swap');
@@ -15,7 +15,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            background-color: transparent !important;
             color: white;
             font-family: 'Montserrat', sans-serif;
             min-height: 100vh;
@@ -24,7 +24,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            overflow-x: hidden;
+            overflow: hidden;
             gap: 20px;
         }
         
@@ -411,9 +411,67 @@
             50% { transform: scale(1.2); }
             100% { transform: scale(1); }
         }
+        
+        /* Styles pour la prévisualisation OBS */
+        .obs-preview {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #ff00c8;
+            z-index: 1000;
+            max-width: 300px;
+        }
+        
+        .obs-preview h3 {
+            color: #ff00c8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .obs-preview ul {
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .obs-preview li {
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .obs-preview code {
+            background: #333;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+        
+        .close-preview {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #ff00c8;
+        }
     </style>
 </head>
 <body>
+    <div class="obs-preview">
+        <span class="close-preview" onclick="this.parentElement.style.display='none'">×</span>
+        <h3>Instructions OBS</h3>
+        <p>Pour éliminer le fond rose dans OBS:</p>
+        <ul>
+            <li>1. Clic droit sur la source navigateur</li>
+            <li>2. Propriétés → CSS personnalisé</li>
+            <li>3. Collez ce code:</li>
+        </ul>
+        <code>body { background-color: rgba(0,0,0,0) !important; overflow: hidden; }</code>
+        <p style="margin-top: 10px; font-size: 0.8rem;">Cliquez sur × pour fermer</p>
+    </div>
+
     <div class="main-container">
 
         <!-- Compteur de subs -->
@@ -421,15 +479,15 @@
             <div class="counter">
                 <i class="fas fa-gift"></i>
                 <span>SUBS:</span>
-                <span id="subCount">0</span>
+                <span id="subCount">7</span>
                 <span>/</span>
                 <span id="maxSubs">500</span>
             </div>
 
             <!-- Barre de progression principale -->
             <div class="progress-bar">
-                <div class="progress" id="subProgress"></div>
-                <div class="progress-text" id="progressText">0%</div>
+                <div class="progress" id="subProgress" style="width: 1.4%;"></div>
+                <div class="progress-text" id="progressText">1.4%</div>
             </div>
 
             <!-- Rotateur d'objectifs -->
@@ -487,7 +545,7 @@
 
     <script>
         // Configuration
-        let currentSubs = 0;
+        let currentSubs = 7;
         let maxSubs = 500;
         let completedGoals = [];
         let currentGoalSet = 0;
@@ -602,7 +660,7 @@
                     </div>
                     <div class="mini-progress">
                         <div class="mini-progress-bar" data-threshold="${goal.threshold}"></div>
-                        <div class="mini-progress-text">0/${goal.threshold}</div>
+                        <div class="mini-progress-text">${Math.min(currentSubs, goal.threshold)}/${goal.threshold}</div>
                     </div>
                 `;
                 
