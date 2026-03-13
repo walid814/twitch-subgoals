@@ -378,7 +378,7 @@
         .neon-effect {
             animation: neonPulse 2s infinite alternate;
         }
-        
+            
         /* Animation personnalisée swing */
         @keyframes slideInSwing {
             0% {
@@ -411,6 +411,44 @@
             50% { transform: scale(1.2); }
             100% { transform: scale(1); }
         }
+                .sponsors {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin: 20px 0 5px 0; /* espacement vertical */
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 0, 200, 0.4);
+            box-shadow: 0 0 15px rgba(255, 0, 200, 0.2);
+            backdrop-filter: blur(3px);
+            opacity: 0;
+            transform: translateX(100px);
+            animation: slideInSwing 1s forwards 2.8s; /* même timing que les autres éléments */
+        }
+        
+        .sponsor-logo {
+            height: 45px;
+            width: auto;
+            filter: drop-shadow(0 0 8px #00ffff);
+            transition: transform 0.3s ease;
+        }
+        
+        .sponsor-logo:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 12px #ff00c8);
+        }
+        
+        /* Ajustement responsive */
+        @media (max-width: 650px) {
+            .sponsors {
+                gap: 20px;
+            }
+            .sponsor-logo {
+                height: 35px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -435,6 +473,11 @@
                     <!-- Les objectifs actifs seront insérés ici par JavaScript -->
                 </div>
             </div>
+            <div class="sponsors">
+                <img src="hardware.png" alt="Hardware" class="sponsor-logo">
+                <img src="credit.png" alt="Credit" class="sponsor-logo">
+            </div>
+            
         </div>
 
         <!-- Panel d'interaction pour OBS -->
@@ -447,10 +490,13 @@
                 <button class="interaction-btn" onclick="updateSubs(10)"><i class="fas fa-plus"></i> +10</button>
                 <button class="interaction-btn reset" onclick="resetSubs()"><i class="fas fa-redo"></i> Réinitialiser</button>
             </div>
+            
             <div class="click-info">
                 <p>Activez "Interagir" dans OBS pour permettre aux viewers de cliquer</p>
             </div>
         </div>
+                <!-- Zone sponsors -->
+        
     </div>
 
     <div class="notification" id="notification">
@@ -468,25 +514,22 @@
         
         // Tous les objectifs
         const allGoals = [
-    {threshold: 3, icon: 'fa-camera', text: "J'active la cam"},
-    {threshold: 10, icon: 'fa-utensils', text: "Chips la plus salée"},
-    {threshold: 20, icon: 'fa-gamepad', text: "Je joue avec les abonnés"},
-    {threshold: 30, icon: 'fa-dumbbell', text: "100 pompes"},
-    {threshold: 40, icon: 'fa-pepper-hot', text: "Chips la plus piquante"},
-    {threshold: 50, icon: 'fa-cocktail', text: "Mounette me fait un cocktail dégueulasse"},
-    {threshold: 60, icon: 'fa-plus-circle', text: "+6H de stream en plus"},
-    {threshold: 80, icon: 'fa-ghost', text: "On joue à un jeu d'horreur hardcore"},
-    {threshold: 100, icon: 'fa-tshirt', text: "1 KILL = 1 Vêtement en reload"},
-    {threshold: 120, icon: 'fa-bed', text: "J'active la caméra pendant que je dors"},
-    {threshold: 140, icon: 'fa-plus-circle', text: "+12H de stream en plus"},
-    {threshold: 180, icon: 'fa-chain-broken', text: "Je dois finir Chained Together sans tomber"},
-    {threshold: 200, icon: 'fa-cookie', text: "Je mange des croquettes"},
-    {threshold: 250, icon: 'fa-dog', text: "Je montre mes chiens"}, // sub goal ajouté
-
-    {threshold: 300, icon: 'fa-utensil-spoon', text: "Je cuisine en stream"},
-    {threshold: 500, icon: 'fa-trophy', text: "Bootcamp FNCS avec NOAGGS en 2026"}
-];
-
+            {threshold: 3, icon: 'fa-camera', text: "J'active la cam"},
+            {threshold: 10, icon: 'fa-utensils', text: "Chips la plus salée"},
+            {threshold: 20, icon: 'fa-gamepad', text: "Je joue avec les abonnés"},
+            {threshold: 30, icon: 'fa-dumbbell', text: "100 pompes"},
+            {threshold: 40, icon: 'fa-pepper-hot', text: "Chips la plus piquante"},
+            {threshold: 50, icon: 'fa-cocktail', text: "Mounette me fait un cocktail dégueulasse"},
+            {threshold: 60, icon: 'fa-plus-circle', text: "+6H de stream en plus"},
+            {threshold: 80, icon: 'fa-ghost', text: "On joue à un jeu d'horreur hardcore"},
+            {threshold: 100, icon: 'fa-tshirt', text: "1 KILL = 1 Vêtement en reload"},
+            {threshold: 120, icon: 'fa-bed', text: "J'active la caméra pendant que je dors"},
+            {threshold: 140, icon: 'fa-plus-circle', text: "+12H de stream en plus"},
+            {threshold: 180, icon: 'fa-chain-broken', text: "Je dois finir Chained Together sans tomber"},
+            {threshold: 200, icon: 'fa-cookie', text: "Je mange des croquettes"},
+            {threshold: 300, icon: 'fa-utensil-spoon', text: "Je cuisine en stream"},
+            {threshold: 10000, icon: 'fa-trophy', text: "Bootcamp FNCS avec NOAGGS en 2026"}
+        ];
         
         // Groupes d'objectifs (4 par groupe)
         const goalSets = [];
@@ -703,7 +746,24 @@
                 animation.onfinish = () => confetti.remove();
             }
         }
+        // Synchronisation entre les onglets / fenêtres (navigateur et OBS)
+window.addEventListener('storage', function(event) {
+    // Si le changement concerne le compteur de subs
+    if (event.key === 'squadirSubs') {
+        const newValue = parseInt(event.newValue);
+        if (!isNaN(newValue)) {
+            currentSubs = newValue;
+            updateSubsDisplay();
+            showNotification('Synchronisé !');
+        }
+    }
+    // Si le changement concerne les objectifs complétés
+    if (event.key === 'squadirCompletedGoals') {
+        completedGoals = JSON.parse(event.newValue || '[]');
+        // On met à jour l'affichage des objectifs (pour les coches)
+        checkCompletedGoals();
+    }
+});
     </script>
 </body>
 </html>
-
