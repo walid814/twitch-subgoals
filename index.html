@@ -137,11 +137,14 @@
             background: #ff00c8;
         }
         
+        /* 🔴 LA CORRECTION EST ICI 🔴 */
         .active-goals {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr); /* Force TOUJOURS 2 lignes de hauteur */
             gap: 15px;
             flex: 1;
+            min-height: 250px; /* Hauteur minimale garantie */
         }
         
         .goal {
@@ -471,8 +474,7 @@
                     <button class="rotator-btn next" onclick="changeGoalSet(1)"><i class="fas fa-chevron-right"></i></button>
                 </div>
                 <div class="active-goals" id="activeGoals">
-                    <!-- Les objectifs actifs seront insérés ici par JavaScript -->
-                </div>
+                    </div>
             </div>
             <div class="sponsors">
                 <img src="hardware.png" alt="Hardware" class="sponsor-logo">
@@ -481,7 +483,6 @@
             
         </div>
 
-        <!-- Panel d'interaction pour OBS -->
         <div class="interaction-panel">
             <div class="interaction-title"><i class="fas fa-mouse-pointer"></i> INTERACTION OBS - CLIQUEZ POUR AJOUTER</div>
             <div class="interaction-controls">
@@ -496,9 +497,7 @@
                 <p>Activez "Interagir" dans OBS pour permettre aux viewers de cliquer</p>
             </div>
         </div>
-                <!-- Zone sponsors -->
-        
-    </div>
+                </div>
 
     <div class="notification" id="notification">
         <div id="notificationMessage"></div>
@@ -513,9 +512,6 @@
         let rotationTimer = 15; // 15 secondes
         let rotationInterval;
         
-        // Tous les objectifs
-       // Tous les objectifs
-        // Tous les objectifs (Synchronisés avec l'overlay)
         // Tous les objectifs synchronisés avec la liste HTML
         const allGoals = [
             {threshold: 10, icon: 'fa-dumbbell', text: "10 Pompes en live"},
@@ -591,8 +587,8 @@
         function updateSubsDisplay() {
             const percentage = (currentSubs / maxSubs) * 100;
             
-            subProgress.style.width = percentage + '%';
-            progressText.textContent = Math.round(percentage) + '%';
+            subProgress.style.width = Math.min(percentage, 100) + '%';
+            progressText.textContent = Math.min(Math.round(percentage), 100) + '%';
             subCountElement.textContent = currentSubs;
             maxSubsElement.textContent = maxSubs;
             
@@ -710,7 +706,6 @@
         function updateSubs(value) {
             currentSubs += value;
             if (currentSubs < 0) currentSubs = 0;
-            if (currentSubs > maxSubs) currentSubs = maxSubs;
             updateSubsDisplay();
             showNotification(`+${value}! Total: ${currentSubs}`);
         }
@@ -761,24 +756,25 @@
                 animation.onfinish = () => confetti.remove();
             }
         }
+        
         // Synchronisation entre les onglets / fenêtres (navigateur et OBS)
-window.addEventListener('storage', function(event) {
-    // Si le changement concerne le compteur de subs
-    if (event.key === 'squadirSubs') {
-        const newValue = parseInt(event.newValue);
-        if (!isNaN(newValue)) {
-            currentSubs = newValue;
-            updateSubsDisplay();
-            showNotification('Synchronisé !');
-        }
-    }
-    // Si le changement concerne les objectifs complétés
-    if (event.key === 'squadirCompletedGoals') {
-        completedGoals = JSON.parse(event.newValue || '[]');
-        // On met à jour l'affichage des objectifs (pour les coches)
-        checkCompletedGoals();
-    }
-});
+        window.addEventListener('storage', function(event) {
+            // Si le changement concerne le compteur de subs
+            if (event.key === 'squadirSubs') {
+                const newValue = parseInt(event.newValue);
+                if (!isNaN(newValue)) {
+                    currentSubs = newValue;
+                    updateSubsDisplay();
+                    showNotification('Synchronisé !');
+                }
+            }
+            // Si le changement concerne les objectifs complétés
+            if (event.key === 'squadirCompletedGoals') {
+                completedGoals = JSON.parse(event.newValue || '[]');
+                // On met à jour l'affichage des objectifs (pour les coches)
+                checkCompletedGoals();
+            }
+        });
     </script>
 </body>
 </html>
