@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tableau de Bord Stream</title>
+    <script src="/socket.io/socket.io.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Roboto:wght@400;700&display=swap');
@@ -39,7 +40,7 @@
             width: 650px;
             margin: 0 auto;
             background: rgba(0, 0, 0, 0.7);
-            border-radius: 15px;
+            border-radius: 0px;
             padding: 30px;
             box-shadow: 0 0 30px rgba(255, 0, 200, 0.5);
             border: 2px solid #ff00c8;
@@ -513,22 +514,36 @@
         let rotationInterval;
         
         // Tous les objectifs
+       // Tous les objectifs
+        // Tous les objectifs (Synchronisés avec l'overlay)
+        // Tous les objectifs synchronisés avec la liste HTML
         const allGoals = [
-            {threshold: 3, icon: 'fa-camera', text: "J'active la cam"},
-            {threshold: 10, icon: 'fa-utensils', text: "Chips la plus salée"},
-            {threshold: 20, icon: 'fa-gamepad', text: "Je joue avec les abonnés"},
-            {threshold: 30, icon: 'fa-dumbbell', text: "100 pompes"},
-            {threshold: 40, icon: 'fa-pepper-hot', text: "Chips la plus piquante"},
-            {threshold: 50, icon: 'fa-cocktail', text: "Mounette me fait un cocktail dégueulasse"},
-            {threshold: 60, icon: 'fa-plus-circle', text: "+6H de stream en plus"},
-            {threshold: 80, icon: 'fa-ghost', text: "On joue à un jeu d'horreur hardcore"},
-            {threshold: 100, icon: 'fa-tshirt', text: "1 KILL = 1 Vêtement en reload"},
-            {threshold: 120, icon: 'fa-bed', text: "J'active la caméra pendant que je dors"},
-            {threshold: 140, icon: 'fa-plus-circle', text: "+12H de stream en plus"},
-            {threshold: 180, icon: 'fa-chain-broken', text: "Je dois finir Chained Together sans tomber"},
-            {threshold: 200, icon: 'fa-cookie', text: "Je mange des croquettes"},
-            {threshold: 300, icon: 'fa-utensil-spoon', text: "Je cuisine en stream"},
-            {threshold: 10000, icon: 'fa-trophy', text: "Bootcamp FNCS avec NOAGGS en 2026"}
+            {threshold: 10, icon: 'fa-dumbbell', text: "10 Pompes en live"},
+            {threshold: 25, icon: 'fa-gamepad', text: "Games avec les viewers"},
+            {threshold: 50, icon: 'fa-fire', text: "Cuillère de moutarde pure"},
+            {threshold: 75, icon: 'fa-music', text: "Challenge \"Bring Sally Up\" avec le local"},
+            {threshold: 100, icon: 'fa-list-ol', text: "Tier-List Saisons Fortnite"},
+            {threshold: 125, icon: 'fa-coins', text: "Giveaway : 1 000 V-Bucks"},
+            {threshold: 150, icon: 'fa-crown', text: "Tirage au sort : j'offre un VIP"},
+            {threshold: 175, icon: 'fa-face-grin-sweat', text: "5 Subs = 1 Pince à linge sur le visage (30 min)"},
+            {threshold: 200, icon: 'fa-gift', text: "Giveaway : Carte Steam de 20€"},
+            {threshold: 250, icon: 'fa-globe', text: "Session GeoGuessr"},
+            {threshold: 300, icon: 'fa-ghost', text: "Soirée Jeu d'horreur"},
+            {threshold: 350, icon: 'fa-dumbbell', text: "Défi muscu : max de pompes"},
+            {threshold: 400, icon: 'fa-eye', text: "Dégustation \"Trompe-l'œil\""},
+            {threshold: 450, icon: 'fa-masks-theater', text: "Essaye de ne pas rire avec Nova (GAGE)"},
+            {threshold: 475, icon: 'fa-gem', text: "Giveaway : 2 800 V-Bucks"},
+            {threshold: 500, icon: 'fa-crosshairs', text: "1v1 vs tout le local (Perdant = Gage)"},
+            {threshold: 550, icon: 'fa-desktop', text: "Tier-List de vos setups (Gagnant = 1 Sub)"},
+            {threshold: 600, icon: 'fa-bug', text: "Dégustation de l'extrême : Insectes"},
+            {threshold: 700, icon: 'fa-puzzle-piece', text: "Let's Play : Poppy Playtime 5"},
+            {threshold: 800, icon: 'fa-hamburger', text: "Défi Giga Tacos avec Zocian"},
+            {threshold: 900, icon: 'fa-table-tennis', text: "Tournoi de Padel 2v2 avec le local"},
+            {threshold: 1000, icon: 'fa-dumbbell', text: "Séance muscu avec le local"},
+            {threshold: 1250, icon: 'fa-tree', text: "Accrobranche avec le local"},
+            {threshold: 1500, icon: 'fa-parachute-box', text: "Simulateur de chute libre avec Stizo"},
+            {threshold: 2000, icon: 'fa-scissors', text: "J'enlève la moustache"},
+            {threshold: 3000, icon: 'fa-box-open', text: "Big Surprise . . ."}
         ];
         
         // Groupes d'objectifs (4 par groupe)
