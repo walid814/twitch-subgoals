@@ -504,6 +504,9 @@
     </div>
 
     <script>
+        // Connexion Socket.IO
+        const socket = io();
+
         // Configuration
         let currentSubs = 0;
         let maxSubs = 3000;
@@ -559,28 +562,23 @@
         const timerElement = document.getElementById('timer');
         
         // Initialisation
-        loadSubsFromStorage();
-        updateSubsDisplay();
+        updateSubsDisplay(); // affiche 0 en attendant la valeur du serveur
         displayGoalSet(0);
         startRotationTimer();
         
-        // Charger depuis le stockage local
-        function loadSubsFromStorage() {
-            const savedSubs = localStorage.getItem('squadirSubs');
-            if (savedSubs !== null) {
-                currentSubs = parseInt(savedSubs);
-            }
-            
-            const savedGoals = localStorage.getItem('squadirCompletedGoals');
-            if (savedGoals) {
-                completedGoals = JSON.parse(savedGoals);
-            }
+        // Écoute des mises à jour depuis le serveur
+        socket.on('updateSubs', (value) => {
+            currentSubs = value;
+            updateSubsDisplay();
+        });
+        
+        // Fonctions d'interaction (appelées par les boutons)
+        function updateSubs(value) {
+            socket.emit('addSubs', value);
         }
         
-        // Sauvegarder dans le stockage local
-        function saveSubsToStorage() {
-            localStorage.setItem('squadirSubs', currentSubs);
-            localStorage.setItem('squadirCompletedGoals', JSON.stringify(completedGoals));
+        function resetSubs() {
+            socket.emit('resetSubs');
         }
         
         // Mettre à jour l'affichage
@@ -595,7 +593,6 @@
             // Mettre à jour les mini barres de progression
             updateMiniProgressBars();
             
-            saveSubsToStorage();
             checkCompletedGoals();
         }
         
@@ -702,22 +699,6 @@
             });
         }
         
-        // Mettre à jour le nombre de subs
-        function updateSubs(value) {
-            currentSubs += value;
-            if (currentSubs < 0) currentSubs = 0;
-            updateSubsDisplay();
-            showNotification(`+${value}! Total: ${currentSubs}`);
-        }
-        
-        // Réinitialiser les subs (un seul clic sans confirmation)
-        function resetSubs() {
-            currentSubs = 0;
-            completedGoals = [];
-            updateSubsDisplay();
-            showNotification("Compteur réinitialisé");
-        }
-        
         // Afficher une notification
         function showNotification(message) {
             notificationMessage.textContent = message;
@@ -756,25 +737,6 @@
                 animation.onfinish = () => confetti.remove();
             }
         }
-        
-        // Synchronisation entre les onglets / fenêtres (navigateur et OBS)
-        window.addEventListener('storage', function(event) {
-            // Si le changement concerne le compteur de subs
-            if (event.key === 'squadirSubs') {
-                const newValue = parseInt(event.newValue);
-                if (!isNaN(newValue)) {
-                    currentSubs = newValue;
-                    updateSubsDisplay();
-                    showNotification('Synchronisé !');
-                }
-            }
-            // Si le changement concerne les objectifs complétés
-            if (event.key === 'squadirCompletedGoals') {
-                completedGoals = JSON.parse(event.newValue || '[]');
-                // On met à jour l'affichage des objectifs (pour les coches)
-                checkCompletedGoals();
-            }
-        });
     </script>
 </body>
 </html>
